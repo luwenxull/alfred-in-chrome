@@ -2,8 +2,10 @@ var strategies = {
     g: function (value) {
         return 'google'
     },
-    b: {
-
+    o: function(value){
+        chrome.tabs.create({
+            url:value
+        })
     }
 }
 

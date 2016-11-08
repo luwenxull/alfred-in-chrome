@@ -1,8 +1,8 @@
 var actionDeliver = {
     do: function (value) {
-        var inputArr = value.split(':');
-        var strategy = inputArr.shift(),
-            content = inputArr.pop();
+        var colonIndex=value.indexOf(':');
+        var strategy = value.slice(0,colonIndex),
+            content = value.slice(colonIndex+1);
             strategies[strategy].call(null,content)
     }
 }
