@@ -4,21 +4,28 @@
   "name": "alfred in chrome",
   "description": "在chrome中模拟alfred的一些功能",
   "version": "0.0.1",
-  "icons": { 
+  "icons": {
     "48": "img/logo.png",
-    "128": "img/logo.png" 
+    "128": "img/logo.png"
   },
   "background": {
     "scripts": ["js/background/eventPage.js"],
     "persistent": false
   },
-  "content_scripts": [
-    {
-      "matches": ["*://*/*"],
-      "js":["js/contentScript/alfred.strategy.js","js/contentScript/alfred.draw.js","js/contentScript/alfred.index.js"],
-      "css":["css/alfred.css"]
+  "content_scripts": [{
+    "matches": ["*://*/*"],
+    "js": ["js/contentScript/alfred.strategy.js", "js/contentScript/alfred.draw.js", "js/contentScript/alfred.index.js"],
+    "css": ["css/alfred.css"]
+  }],
+  "commands": {
+    "append-input": {
+      "suggested_key": {
+        "default": "Alt+Q",
+        "mac": "Command+Shift+Y"
+      },
+      "description": "Toggle feature foo"
     }
-  ],
+  },
   "permissions": [
     "activeTab",
     "tabs"
