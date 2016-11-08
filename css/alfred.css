@@ -1,0 +1,16 @@
+input#alfred-input{
+    border: 0;
+    outline: 0;
+    position: fixed;
+    width: 80%;
+    top: 30%;
+    left: 10%;
+    padding: 6px 12px;
+    border-radius: 4px;
+    background-color: #42A5F5;
+    color: white;
+    font-family: consolas,microsoft yahei;
+    line-height: 20px;
+    text-align: center;
+    z-index: 1000;
+}

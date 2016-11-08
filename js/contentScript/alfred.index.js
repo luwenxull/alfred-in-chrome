@@ -2,8 +2,10 @@ console.log('welcome to alfred-in-chrome');
 
 document.body.addEventListener('keydown', function (e) {
 	var key = e.key,
-		alt = key.alt;
+		alt = e.altKey;
 		if(key==',' && alt){
-			show()
+			e.stopPropagation();
+			e.preventDefault();
+			drawInput()
 		}
 })
