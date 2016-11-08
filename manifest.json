@@ -1,0 +1,25 @@
+{
+  "manifest_version": 2,
+
+  "name": "alfred in chrome",
+  "description": "在chrome中模拟alfred的一些功能",
+  "version": "0.0.1",
+  "icons": { 
+    "48": "img/logo.png",
+    "128": "img/logo.png" 
+  },
+  "background": {
+    // "scripts": ["js/eventPage.js"],
+    // "persistent": false
+  },
+  "content_scripts": [
+    {
+      "matches": ["*://*/*"],
+      "js":["js/contentScript/alfred.index.js","js/contentScript/alfred.draw.js"]
+    }
+  ],
+  "permissions": [
+    "activeTab",
+    "tabs"
+  ]
+}
