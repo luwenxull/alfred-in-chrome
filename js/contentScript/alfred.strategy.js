@@ -10,7 +10,12 @@ var strategies={
             // console.log(res);
         });
     },
-    
+    bookmarks:function(content){
+        chrome.runtime.sendMessage({type:'bookmarks',content:content},function(res){
+            console.log(res)
+            // console.log(res);
+        });
+    },
     o:function(content){
         var reg=/https{0,1}:\/\//i;
         if(!reg.test(content)){
@@ -22,7 +27,7 @@ var strategies={
     }
 }
 
-var allActionTypes=['google','collins'];
+var allActionTypes=['google','collins','bookmarks'];
 
 var contentTemplate="<div class='stage-item'><img class='item-icon' src='$$1'/><div class='item-text'><p class='text-title'>$$2</p><p class='text-subtitle'>$$3</p></div></div>"
 

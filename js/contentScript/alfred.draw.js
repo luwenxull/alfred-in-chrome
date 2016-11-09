@@ -37,6 +37,7 @@ function createAlfred() {
     document.body.appendChild(alfred);
 
     attachEventListenerOfInput(alfred_input);
+    attachEventListenerOfContent(alfred_content);
     alfred_input.focus();
 }
 
@@ -50,10 +51,17 @@ Handle.prototype.setNext = function (handle) {
 
 var handle_enter = new Handle(function (key, input) {
     if (key.toLowerCase() == 'enter') {
+        var value = input.value;
+        if (value == 'bookmarks') {
+            _alfred_extension.currentActionType = getActionType(value);
+            input.value = '';
+            actionDeliver.do();
+            return 
+        }
         if (_alfred_extension.currentActionType) {
-            actionDeliver.do(input.value)
+            actionDeliver.do(value)
         } else {
-            _alfred_extension.currentActionType = getActionType(input.value);
+            _alfred_extension.currentActionType = getActionType(value);
             input.value = '';
         }
     } else {
@@ -77,25 +85,7 @@ var handle_arrow = new Handle(function (key, input, e) {
         e.stopPropagation();
         e.preventDefault();
         // if(key.toLowerCase)
-        var stage_items = document.querySelectorAll('.stage-item'),
-            l = stage_items.length;
-        var currentActiveIndex = 0;
-        for (var i = 0; i < l; i++) {
-            var si = stage_items[i];
-            if (si.classList.contains('active')) {
-                si.classList.remove('active');
-                currentActiveIndex = i
-            }
-        }
-
-        if (key.toLowerCase() == 'arrowdown') currentActiveIndex++;
-        else currentActiveIndex--;
-
-        if(currentActiveIndex<0) currentActiveIndex=0;
-        if(currentActiveIndex>=l) currentActiveIndex=l-1;
-
-        stage_items[currentActiveIndex].classList.add('active');
-        stage_items[currentActiveIndex].scrollIntoView();
+        moveActive(key);
     } else {
         this.next.do.apply(this.next, arguments)
     }
@@ -108,6 +98,44 @@ handle_enter.setNext(handle_backspace).setNext(handle_arrow).setNext(handle_defa
 function attachEventListenerOfInput(input) {
     input.addEventListener('keydown', function (e) {
         handle_enter.do(e.key, this, e)
+    })
+}
+
+
+var handle_arrow_content = new Handle(function (key, input, e) {
+    if (key.toLowerCase() == 'arrowdown' || key.toLowerCase() == 'arrowup') {
+        moveActive(key)
+    } else {
+        this.next.do.apply(this.next, arguments)
+    }
+})
+
+function moveActive(key) {
+    var stage_items = document.querySelectorAll('.stage-item'),
+        l = stage_items.length;
+    var currentActiveIndex = 0;
+    for (var i = 0; i < l; i++) {
+        var si = stage_items[i];
+        if (si.classList.contains('active')) {
+            si.classList.remove('active');
+            currentActiveIndex = i
+        }
+    }
+
+    if (key.toLowerCase() == 'arrowdown') currentActiveIndex++;
+    else currentActiveIndex--;
+
+    if (currentActiveIndex < 0) currentActiveIndex = 0;
+    if (currentActiveIndex >= l) currentActiveIndex = l - 1;
+
+    stage_items[currentActiveIndex].classList.add('active');
+    stage_items[currentActiveIndex].scrollIntoView();
+    stage_items[currentActiveIndex].focus();
+}
+
+function attachEventListenerOfContent(content) {
+    content.addEventListener('keydown', function (e) {
+
     })
 }
 

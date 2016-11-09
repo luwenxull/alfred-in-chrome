@@ -23,17 +23,26 @@ var strategies = {
                 var json = JSON.parse(body);
                 var items = [];
                 json.paraphrases.forEach((p) => {
-                        items.push({
-                            title: p.english_type + ' ' + p.chinese,
-                            subtitle: p.sample_sentence[0]
-                        })
+                    items.push({
+                        title: p.english_type + ' ' + p.chinese,
+                        subtitle: p.sample_sentence[0]
                     })
-                    res({
-                        icon:"http://cloud.ggoer.com/alfred/collins.png",
-                        items:items
-                    });
+                })
+                res({
+                    icon: "http://cloud.ggoer.com/alfred/collins.png",
+                    items: items
+                });
             }
 
+        });
+    },
+    bookmarks: function (value, res) {
+        var bookmarksList = [];
+        chrome.bookmarks.getTree(function (tree) {
+            tree.forEach(function (one) {
+                bookmarksList = bookmarksList.concat(getBookmarksOfFolder(one));
+            })
+            res(bookmarksList);
         });
     },
     o: function (value) {
@@ -64,9 +73,20 @@ function makeRequest(info, callback) {
 chrome.runtime.onMessage.addListener(function (request, sender, response) {
     var type = request.type,
         content = request.content;
-    strategies[type].call(null, content, response)
+    strategies[type].call(null, content, response);
+    return true
 });
 
-chrome.bookmarks.getTree(function(tree){
-    console.log(tree);
-})
+
+function getBookmarksOfFolder(folder) {
+    var bookmarksList = [];
+    for (var i = 0; i < folder.children.length; i++) {
+        var child = folder.children[i];
+        if (child.children) {
+            bookmarksList = bookmarksList.concat(getBookmarksOfFolder(child))
+        } else {
+            bookmarksList.push(child)
+        }
+    }
+    return bookmarksList
+}
