@@ -12,13 +12,13 @@ function createAlfred() {
     var alfred = document.createElement('div'),
         alfred_content = document.createElement('div'),
         alfred_input = document.createElement('input'),
-        alfred_input_container=document.createElement('div'),
-        alfred_action_img=document.createElement('img');
+        alfred_input_container = document.createElement('div'),
+        alfred_action_img = document.createElement('img');
 
     _alfred_extension.alfred = alfred;
     _alfred_extension.alfred_content = alfred_content;
     _alfred_extension.alfred_input = alfred_input;
-    _alfred_extension.alfred_action_img=alfred_action_img;
+    _alfred_extension.alfred_action_img = alfred_action_img;
 
     alfred.setAttribute('id', 'alfred-container');
     alfred_content.setAttribute('id', 'alfred-stage');
@@ -26,10 +26,10 @@ function createAlfred() {
 
     alfred_input_container.appendChild(alfred_input);
     alfred_input_container.appendChild(alfred_action_img);
-    alfred_input_container.setAttribute('id','alfred-input-container')
+    alfred_input_container.setAttribute('id', 'alfred-input-container')
 
-    alfred_action_img.style.display="none";
-    alfred_action_img.setAttribute('id',"alfred-action-img")
+    alfred_action_img.style.display = "none";
+    alfred_action_img.setAttribute('id', "alfred-action-img")
 
     alfred.appendChild(alfred_input_container);
     alfred.appendChild(alfred_content);
@@ -40,45 +40,63 @@ function createAlfred() {
     alfred_input.focus();
 }
 
+var Handle = function (fn) {
+    this.do = fn;
+}
+
+Handle.prototype.setNext = function (handle) {
+    return this.next = handle
+}
+
+var handle_enter = new Handle(function (key, input) {
+    if (key.toLowerCase() == 'enter') {
+        if (_alfred_extension.currentActionType) {
+            actionDeliver.do(input.value)
+        } else {
+            _alfred_extension.currentActionType = getActionType(input.value);
+            input.value = '';
+        }
+    } else {
+        this.next.do.apply(this.next,arguments)
+    }
+})
+
+var handle_backspace = new Handle(function (key, input) {
+    if (key.toLowerCase() == 'backspace') {
+        if (input.value === undefined || input.value === '') {
+            _alfred_extension.currentActionType = void 0;
+            _alfred_extension.alfred_action_img.style.display = 'none'
+        }
+    } else {
+        this.next.do.apply(this.next,arguments)
+    }
+})
+
+var handle_arrow = new Handle(function (key, input,e) {
+    if (key.toLowerCase() == 'arrowdown' || key.toLowerCase() == 'arrowup') {
+        e.stopPropagation();
+        e.preventDefault();
+    } else {
+        this.next.do.apply(this.next,arguments)
+    }
+})
+
+var handle_default=new Handle(function(){}) 
+
+handle_enter.setNext(handle_backspace).setNext(handle_arrow).setNext(handle_default)
+
 function attachEventListenerOfInput(input) {
     input.addEventListener('keydown', function (e) {
-        var key = e.key,value = this.value;
-        if (key.toLowerCase() == 'enter') {
-            if (_alfred_extension.currentActionType) {
-                actionDeliver.do(this.value)
-            } else {
-                _alfred_extension.currentActionType=getActionType(value);
-                this.value='';
-            }
-        }
-        if(key.toLowerCase()=='backspace'){
-            if(value===undefined || value===''){
-                _alfred_extension.currentActionType=void 0;
-                _alfred_extension.alfred_action_img.style.display='none'
-            }
-        }
-        if(key.toLowerCase()=='arrowdown'){
-            e.stopPropagation();
-		    e.preventDefault();
-            var topPx=_alfred_extension.alfred_content.scrollTop;
-            _alfred_extension.alfred_content.scrollTop=topPx+300;
-        }
-        if(key.toLowerCase()=='arrowup'){
-            e.stopPropagation();
-		    e.preventDefault();
-            var topPx=_alfred_extension.alfred_content.scrollTop;
-            _alfred_extension.alfred_content.scrollTop=topPx-300;
-        }
-
+        handle_enter.do(e.key, this,e)
     })
 }
 
 function getActionType(value) {
     for (var i = 0; i < allActionTypes.length; i++) {
         var aType = allActionTypes[i]
-        if (aType===value) {
-             _alfred_extension.alfred_action_img.setAttribute('src',iconConfig[aType]);
-             _alfred_extension.alfred_action_img.style.display="inline";
+        if (aType === value) {
+            _alfred_extension.alfred_action_img.setAttribute('src', iconConfig[aType]);
+            _alfred_extension.alfred_action_img.style.display = "inline";
             return aType
         }
     }
