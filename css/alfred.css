@@ -1,16 +1,86 @@
-input#alfred-input{
-    border: 0;
-    outline: 0;
+#alfred-container{
+    width: 100%;
+    margin: 0 auto;
     position: fixed;
-    width: 80%;
-    top: 30%;
-    left: 10%;
-    padding: 6px 12px;
-    border-radius: 4px;
-    background-color: #42A5F5;
-    color: white;
-    font-family: consolas,microsoft yahei;
-    line-height: 20px;
+    top: 200px;
     text-align: center;
     z-index: 1000;
+}
+
+#alfred-container *{
+    box-sizing: border-box
+}
+
+
+#alfred-input-container{
+    width: 400px;
+    margin: 0 auto;
+    position: relative
+}
+
+#alfred-input{
+    border: 0;
+    outline: 0;
+    width: 100%;
+    padding: 6px 12px 6px 35px;
+    border-top-left-radius: 3px;
+    border-top-right-radius: 3px;
+    background-color: #E0F7FA;
+    font-size: 16px;
+    font-family: menlo,consolas,microsoft yahei;
+    line-height: 25px;
+}
+
+#alfred-stage{
+    width: 400px;
+    margin: 0 auto;
+    max-height: 300px;
+    overflow-y: auto;
+    text-align: left;
+    background-color: rgba(225, 245, 254, 0.8);
+    border-bottom-left-radius: 3px;
+    border-bottom-right-radius: 3px;
+}
+
+#alfred-action-img{
+    position: absolute;
+    top: 0;
+    left: 5px;
+    width: 20px;
+    top: 9px;
+}
+#alfred-stage .stage-item{
+    padding: 5px;
+    border-bottom: 1px solid #9e9e9e;
+}
+
+#alfred-stage .stage-item.active{
+    background: #90CAF9
+}
+
+#alfred-stage .stage-item:last-child{
+    border-bottom: 0
+}
+
+#alfred-stage .item-text{
+    display: inline-block;
+    vertical-align: middle;
+    margin-left: 10px;
+    width: 330px;
+}
+
+#alfred-stage .item-icon{
+    width: 20px;
+    vertical-align: middle
+}
+
+#alfred-stage .text-subtitle{
+    line-height: 20px;
+    font-size: 14px;
+    color: #757575
+}
+
+#alfred-stage .text-title{
+    font-size: 16px;
+    line-height: 25px;
 }

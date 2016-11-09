@@ -14,20 +14,12 @@
   },
   "content_scripts": [{
     "matches": ["*://*/*"],
-    "js": ["js/contentScript/alfred.strategy.js", "js/contentScript/alfred.draw.js", "js/contentScript/alfred.index.js"],
+    "js": ["js/contentScript/alfred.icon.js","js/contentScript/alfred.strategy.js", "js/contentScript/alfred.draw.js", "js/contentScript/alfred.index.js"],
     "css": ["css/alfred.css"]
   }],
-  "commands": {
-    "append-input": {
-      "suggested_key": {
-        "default": "Alt+Q",
-        "mac": "Command+Shift+Y"
-      },
-      "description": "Toggle feature foo"
-    }
-  },
   "permissions": [
     "activeTab",
-    "tabs"
+    "tabs",
+    "http://*.ggoer.com/"
   ]
 }
