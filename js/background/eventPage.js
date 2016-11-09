@@ -66,3 +66,7 @@ chrome.runtime.onMessage.addListener(function (request, sender, response) {
         content = request.content;
     strategies[type].call(null, content, response)
 });
+
+chrome.bookmarks.getTree(function(tree){
+    console.log(tree);
+})
