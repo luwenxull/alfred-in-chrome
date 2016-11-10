@@ -47,14 +47,16 @@ Handle.prototype.setNext = function (handle) {
     return this.next = handle
 };
 
-function transform(abbr) {
-    switch (true) {
-        case abbr == 'gg' || abbr == 'google':
+function transformActionAbbr(abbr) {
+    switch (abbr) {
+        case 'gg':
             return 'google'
-        case abbr == 'cl' || abbr == 'collins':
+        case 'cl':
             return 'collins'
-        case abbr == 'bm' || abbr == 'bookmarks':
+        case 'bm':
             return 'bookmarks'
+        case 'bd':
+            return 'baidu'
         default:
             return abbr
     }
@@ -77,10 +79,11 @@ function searchByFilter(value) {
 var handle_enter = new Handle(function (key, input) {
     if (key.toLowerCase() == 'enter') {
         if (!_alfred_extension.searchLock) {
-            var value = transform(input.value);
+            var value = input.value;
             if (_alfred_extension.currentActionType) {
                 actionDeliver.do(_alfred_extension.currentActionType, value)
             } else {
+                value = transformActionAbbr(value);
                 _alfred_extension.currentActionType = getActionType(value);
                 input.value = '';
                 if (value == 'bookmarks') {

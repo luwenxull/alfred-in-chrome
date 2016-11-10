@@ -2,7 +2,12 @@
 var strategies={
     google:function(content){
         chrome.runtime.sendMessage({type:'google',content:content},function(res){
-            displayContent(res)
+            // displayContent(res)
+        });
+    },
+    baidu:function(content){
+        chrome.runtime.sendMessage({type:'baidu',content:content},function(res){
+            // displayContent(res)
         });
     },
     collins:function(content){
@@ -39,7 +44,7 @@ var actionDeliver = {
     }
 }
 
-var allActionTypes=['google','collins','bookmarks','go','bus'];
+var allActionTypes=['google','collins','bookmarks','go','bus','baidu'];
 
 var contentTemplate="<div class='stage-item' data-href='$$href'><img class='item-icon' src='$$1'/><div class='item-text'><p class='text-title'>$$2</p><p class='text-subtitle'>$$3</p></div></div>"
 

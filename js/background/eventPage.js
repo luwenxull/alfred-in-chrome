@@ -1,14 +1,12 @@
 var strategies = {
     google: function (value, res) {
-        res({
-            icon: "http://cloud.ggoer.com/alfred/google.png",
-            items: [{
-                title: '你好',
-                subtitle: '你是谁'
-            }, {
-                title: '你好',
-                subtitle: '我是陆雯旭'
-            }]
+        chrome.tabs.create({
+            url: "https://google.com/#q=" + value
+        })
+    },
+    baidu: function (value) {
+        chrome.tabs.create({
+            url: "https://baidu.com/s?wd=" + value
         })
     },
     collins: function (value, res) {
@@ -53,7 +51,7 @@ var strategies = {
             url: value
         })
     },
-    bus: function (value,res) {
+    bus: function (value, res) {
         var xhr = makeRequest({
             url: "http://ggoer.com/proxy",
             type: 'post',
@@ -86,7 +84,6 @@ var strategies = {
 
 function makeRequest(info, callback) {
     var xhr = new XMLHttpRequest();
-
     xhr.onreadystatechange = function () {
         if (xhr.readyState === XMLHttpRequest.DONE) {
             if (xhr.status === 200) {
