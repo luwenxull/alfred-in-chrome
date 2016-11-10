@@ -48,7 +48,7 @@ var strategies = {
             });
         });
     },
-    open: function (value) {
+    go: function (value) {
         chrome.tabs.create({
             url: value
         })
@@ -69,8 +69,6 @@ function makeRequest(info, callback) {
     xhr.open(info.type || 'get', info.url, false);
     xhr.setRequestHeader("Content-Type", "application/json");
     xhr.send(JSON.stringify(info.data));
-
-    console.log('finish');
 }
 
 chrome.runtime.onMessage.addListener(function (request, sender, response) {

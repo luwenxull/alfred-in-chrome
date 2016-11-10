@@ -65,7 +65,7 @@ function searchByFilter(value) {
     var item, filterItems = []
     for (var i = 0; i < items.length; i++) {
         item = items[i];
-        if (item.title.search(value) != -1) {
+        if (item.title.toLowerCase().search(value) != -1) {
             filterItems.push(item)
         }
     }
@@ -132,7 +132,7 @@ handle_go = new Handle(function (key, input, e) {
     if (key == '/' && alt && _alfred_extension.currentActiveItem) {
         var href = _alfred_extension.currentActiveItem.getAttribute('data-href');
         if (href) {
-            actionDeliver.do('open', href)
+            actionDeliver.do('go', href)
         }
     } else {
         this.next.do.apply(this.next, arguments)
