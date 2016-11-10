@@ -43,8 +43,8 @@ var strategies = {
                 bookmarksList = bookmarksList.concat(getBookmarksOfFolder(one));
             })
             res({
-                items:bookmarksList,
-                icon:"http://cloud.ggoer.com/alfred/bookmark.png"
+                items: bookmarksList,
+                icon: "http://cloud.ggoer.com/alfred/bookmark.png"
             });
         });
     },
@@ -52,6 +52,34 @@ var strategies = {
         chrome.tabs.create({
             url: value
         })
+    },
+    bus: function (value,res) {
+        var xhr = makeRequest({
+            url: "http://ggoer.com/proxy",
+            type: 'post',
+            data: {
+                url: 'http://ggoer.com/bus/' + value
+            }
+        }, function (body) {
+            if (body) {
+                var json = JSON.parse(body);
+                var items = [];
+                json.data.data.forEach((bus, index) => {
+                    if (bus.InTime) {
+                        items.push({
+                            title: index + ' ' + bus.StationCName,
+                            subtitle: bus.InTime
+                        })
+                    }
+
+                })
+                res({
+                    icon: "http://cloud.ggoer.com/alfred/bus.png",
+                    items: items
+                });
+            }
+
+        });
     }
 }
 
@@ -86,7 +114,7 @@ function getBookmarksOfFolder(folder) {
         if (child.children) {
             bookmarksList = bookmarksList.concat(getBookmarksOfFolder(child))
         } else {
-            child.subtitle=child.href=child.url;
+            child.subtitle = child.href = child.url;
             bookmarksList.push(child)
         }
     }
