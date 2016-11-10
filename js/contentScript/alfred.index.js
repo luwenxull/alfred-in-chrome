@@ -36,11 +36,27 @@ function createAlfred() {
 		document.body.appendChild(alfred);
 
 		attachEventListenerOfInput(alfred_input);
-		// attachEventListenerOfContent(alfred_content);
 		alfred_input.focus();
 
 		_alfred_extension.createLock = true;
+		_alfred_extension.inputHistory=new AlfredHistory()
 	}
+}
+
+function AlfredHistory(){
+	this.history=[]
+}
+
+AlfredHistory.prototype.add=function(value){
+	this.history.push(value)
+}
+
+AlfredHistory.prototype.getLast=function(){
+	return this.history[this.history.length-1]
+}
+
+AlfredHistory.prototype.getAll=function(){
+	return this.history
 }
 
 function resetAlfredData() {
@@ -76,5 +92,8 @@ function attachEventListenerOfInput(input) {
 	input.addEventListener('keydown', function (e) {
 		handle_enter.do(e.key, this, e);
 		e.stopPropagation();
+	})
+	input.addEventListener('change',function(){
+		console.log('change');
 	})
 }

@@ -1,4 +1,4 @@
-function _alfred_moveActive(key) {
+function moveActive(key) {
     var stage_items = document.querySelectorAll('.stage-item'),
         l = stage_items.length;
     if (stage_items) {
@@ -76,11 +76,20 @@ function searchByFilter(value) {
         items: filterItems
     }
 }
+
+function ifInputChanged(value){
+    return value===_alfred_extension.inputHistory.getLast();
+}
+
 var handle_enter = new Handle(function (key, input) {
     if (key.toLowerCase() == 'enter') {
+        var value = input.value;
+        var changed=ifInputChanged(value);
+        _alfred_extension.inputHistory.add(value)
         if (!_alfred_extension.searchLock) {
-            var value = input.value;
             if (_alfred_extension.currentActionType) {
+                
+
                 actionDeliver.do(_alfred_extension.currentActionType, value)
             } else {
                 value = transformActionAbbr(value);
@@ -92,7 +101,7 @@ var handle_enter = new Handle(function (key, input) {
                 }
             }
         } else {
-            var filterItems = searchByFilter(input.value);
+            var filterItems = searchByFilter(value);
             actionDeliver.do('filter', filterItems)
         }
     } else {
@@ -116,8 +125,7 @@ var handle_arrow = new Handle(function (key, input, e) {
     if (key.toLowerCase() == 'arrowdown' || key.toLowerCase() == 'arrowup' || key == '[' || key == ']') {
         e.stopPropagation();
         e.preventDefault();
-        // if(key.toLowerCase)
-        _alfred_moveActive(key);
+        moveActive(key);
     } else {
         this.next.do.apply(this.next, arguments)
     }
@@ -142,6 +150,5 @@ handle_go = new Handle(function (key, input, e) {
     }
 })
 var handle_default = new Handle(function () {});
-
 
 handle_enter.setNext(handle_backspace).setNext(handle_arrow).setNext(handle_go).setNext(handle_escape);
