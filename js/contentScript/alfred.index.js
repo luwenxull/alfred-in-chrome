@@ -1,6 +1,7 @@
 var _alfred_extension = {
     currentActionType: undefined,
 	currentDataDisplay:undefined,
+	currentActiveItem:undefined,
 	searchLock:false
 }
 

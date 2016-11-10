@@ -48,7 +48,7 @@ var strategies = {
             });
         });
     },
-    o: function (value) {
+    open: function (value) {
         chrome.tabs.create({
             url: value
         })
@@ -88,7 +88,7 @@ function getBookmarksOfFolder(folder) {
         if (child.children) {
             bookmarksList = bookmarksList.concat(getBookmarksOfFolder(child))
         } else {
-            child.subtitle=child.url;
+            child.subtitle=child.href=child.url;
             bookmarksList.push(child)
         }
     }

@@ -1,24 +1,28 @@
-function moveActive(key) {
+function _alfred_moveActive(key) {
     var stage_items = document.querySelectorAll('.stage-item'),
         l = stage_items.length;
-    var currentActiveIndex = 0;
-    for (var i = 0; i < l; i++) {
-        var si = stage_items[i];
-        if (si.classList.contains('active')) {
-            si.classList.remove('active');
-            currentActiveIndex = i
+    if (stage_items) {
+        var currentActiveIndex = -1;
+        for (var i = 0; i < l; i++) {
+            var si = stage_items[i];
+            if (si.classList.contains('active')) {
+                si.classList.remove('active');
+                currentActiveIndex = i
+            }
         }
+
+        if (key.toLowerCase() == 'arrowdown' || key == ']') currentActiveIndex++;
+        else currentActiveIndex--;
+
+        if (currentActiveIndex < 0) currentActiveIndex = 0;
+        if (currentActiveIndex >= l) currentActiveIndex = l - 1;
+
+        var activeItem = stage_items[currentActiveIndex];
+        activeItem.classList.add('active');
+        activeItem.scrollIntoView();
+        activeItem.focus();
+        _alfred_extension.currentActiveItem = activeItem;
     }
-
-    if (key.toLowerCase() == 'arrowdown') currentActiveIndex++;
-    else currentActiveIndex--;
-
-    if (currentActiveIndex < 0) currentActiveIndex = 0;
-    if (currentActiveIndex >= l) currentActiveIndex = l - 1;
-
-    stage_items[currentActiveIndex].classList.add('active');
-    stage_items[currentActiveIndex].scrollIntoView();
-    stage_items[currentActiveIndex].focus();
 }
 
 
@@ -96,9 +100,9 @@ var handle_enter = new Handle(function (key, input) {
 var handle_backspace = new Handle(function (key, input) {
     if (key.toLowerCase() == 'backspace') {
         if (input.value === undefined || input.value === '') {
-            _alfred_extension.currentActionType = void 0;
+            resetAlfredData();
             _alfred_extension.alfred_action_img.style.display = 'none';
-            _alfred_extension.searchLock = false;
+            _alfred_extension.alfred_content.innerHTML = '';
         }
     } else {
         this.next.do.apply(this.next, arguments)
@@ -106,24 +110,27 @@ var handle_backspace = new Handle(function (key, input) {
 });
 
 var handle_arrow = new Handle(function (key, input, e) {
-    if (key.toLowerCase() == 'arrowdown' || key.toLowerCase() == 'arrowup') {
+    if (key.toLowerCase() == 'arrowdown' || key.toLowerCase() == 'arrowup' || key == '[' || key == ']') {
         e.stopPropagation();
         e.preventDefault();
         // if(key.toLowerCase)
-        moveActive(key);
+        _alfred_moveActive(key);
     } else {
         this.next.do.apply(this.next, arguments)
     }
 });
 
+function resetAlfredData() {
+    _alfred_extension.currentActionType = undefined;
+    _alfred_extension.currentDataDisplay = undefined;
+    _alfred_extension.currentActiveItem = undefined;
+    _alfred_extension.searchLock = false;
+
+}
 
 function closeAlfred() {
-    _alfred_extension.alfred.remove()
-    _alfred_extension = {
-        currentActionType: undefined,
-        currentDataDisplay: undefined,
-        searchLock: false
-    }
+    _alfred_extension.alfred.remove();
+    resetAlfredData();
 }
 var handle_escape = new Handle(function (key, input, e) {
     var alt = e.altKey;
@@ -132,7 +139,18 @@ var handle_escape = new Handle(function (key, input, e) {
     }
 })
 
+handle_go = new Handle(function (key, input, e) {
+    var alt = e.altKey;
+    if (key == '/' && alt) {
+        var href=_alfred_extension.currentActiveItem.getAttribute('data-href');
+        if(href){
+            actionDeliver.do('open',href)
+        }
+    } else {
+        this.next.do.apply(this.next, arguments)
+    }
+})
 var handle_default = new Handle(function () {});
 
 
-handle_enter.setNext(handle_backspace).setNext(handle_arrow).setNext(handle_escape).setNext(handle_default);
+handle_enter.setNext(handle_backspace).setNext(handle_arrow).setNext(handle_go).setNext(handle_escape);

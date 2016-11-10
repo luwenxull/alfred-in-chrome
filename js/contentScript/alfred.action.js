@@ -18,12 +18,12 @@ var strategies={
     filter:function(filterItems){
         displayContent(filterItems,true)
     },
-    o:function(content){
+    open:function(content){
         var reg=/https{0,1}:\/\//i;
         if(!reg.test(content)){
             content='http://'+content
         }
-        chrome.runtime.sendMessage({type:'o',content:content},function(res){
+        chrome.runtime.sendMessage({type:'open',content:content},function(res){
         });
     }
 }
@@ -37,7 +37,7 @@ var actionDeliver = {
 
 var allActionTypes=['google','collins','bookmarks','gg','cl','bm'];
 
-var contentTemplate="<div class='stage-item'><img class='item-icon' src='$$1'/><div class='item-text'><p class='text-title'>$$2</p><p class='text-subtitle'>$$3</p></div></div>"
+var contentTemplate="<div class='stage-item' data-href='$$href'><img class='item-icon' src='$$1'/><div class='item-text'><p class='text-title'>$$2</p><p class='text-subtitle'>$$3</p></div></div>"
 
 function displayContent(json,filter){
     !filter && (_alfred_extension.currentDataDisplay=json);
@@ -50,6 +50,7 @@ function displayContent(json,filter){
         TemplateCopy=TemplateCopy.replace('$$1',json.icon);
         TemplateCopy=TemplateCopy.replace('$$2',item.title);
         TemplateCopy=TemplateCopy.replace('$$3',item.subtitle);
+        TemplateCopy=TemplateCopy.replace('$$href',item.href || '');
         div.innerHTML=TemplateCopy;
         _alfred_extension.alfred_content.append(div.childNodes[0])
     }
