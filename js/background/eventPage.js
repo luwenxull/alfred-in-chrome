@@ -42,7 +42,10 @@ var strategies = {
             tree.forEach(function (one) {
                 bookmarksList = bookmarksList.concat(getBookmarksOfFolder(one));
             })
-            res(bookmarksList);
+            res({
+                items:bookmarksList,
+                icon:"http://cloud.ggoer.com/alfred/bookmark.png"
+            });
         });
     },
     o: function (value) {
@@ -85,6 +88,7 @@ function getBookmarksOfFolder(folder) {
         if (child.children) {
             bookmarksList = bookmarksList.concat(getBookmarksOfFolder(child))
         } else {
+            child.subtitle=child.url;
             bookmarksList.push(child)
         }
     }

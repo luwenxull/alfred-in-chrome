@@ -1,3 +1,4 @@
+/*策略*/
 var strategies={
     google:function(content){
         chrome.runtime.sendMessage({type:'google',content:content},function(res){
@@ -7,14 +8,15 @@ var strategies={
     collins:function(content){
         chrome.runtime.sendMessage({type:'collins',content:content},function(res){
             displayContent(res)
-            // console.log(res);
         });
     },
     bookmarks:function(content){
         chrome.runtime.sendMessage({type:'bookmarks',content:content},function(res){
-            console.log(res)
-            // console.log(res);
+            displayContent(res)
         });
+    },
+    filter:function(filterItems){
+        displayContent(filterItems,true)
     },
     o:function(content){
         var reg=/https{0,1}:\/\//i;
@@ -22,16 +24,24 @@ var strategies={
             content='http://'+content
         }
         chrome.runtime.sendMessage({type:'o',content:content},function(res){
-            // console.log(res);
         });
     }
 }
 
-var allActionTypes=['google','collins','bookmarks'];
+/*策略分发对象*/
+var actionDeliver = {
+    do: function (type,value) {
+        strategies[type].call(null, value)
+    }
+}
+
+var allActionTypes=['google','collins','bookmarks','gg','cl','bm'];
 
 var contentTemplate="<div class='stage-item'><img class='item-icon' src='$$1'/><div class='item-text'><p class='text-title'>$$2</p><p class='text-subtitle'>$$3</p></div></div>"
 
-function displayContent(json){
+function displayContent(json,filter){
+    !filter && (_alfred_extension.currentDataDisplay=json);
+    
     var TemplateCopy,item;
     var div=document.createElement('div');
     _alfred_extension.alfred_content.innerHTML='';

@@ -5,17 +5,18 @@
     top: 200px;
     text-align: center;
     z-index: 1000;
+    font-family: menlo,consolas,microsoft yahei;
 }
 
 #alfred-container *{
-    box-sizing: border-box
+    box-sizing: border-box;
+    margin:0
 }
-
 
 #alfred-input-container{
     width: 400px;
     margin: 0 auto;
-    position: relative
+    position: relative;
 }
 
 #alfred-input{
@@ -27,7 +28,6 @@
     border-top-right-radius: 3px;
     background-color: #E0F7FA;
     font-size: 16px;
-    font-family: menlo,consolas,microsoft yahei;
     line-height: 25px;
 }
 
@@ -77,10 +77,12 @@
 #alfred-stage .text-subtitle{
     line-height: 20px;
     font-size: 14px;
-    color: #757575
+    color: #757575;
+    word-wrap: break-word;
 }
 
 #alfred-stage .text-title{
     font-size: 16px;
     line-height: 25px;
+    word-wrap: break-word;
 }
