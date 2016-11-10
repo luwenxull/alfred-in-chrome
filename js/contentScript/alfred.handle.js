@@ -120,18 +120,6 @@ var handle_arrow = new Handle(function (key, input, e) {
     }
 });
 
-function resetAlfredData() {
-    _alfred_extension.currentActionType = undefined;
-    _alfred_extension.currentDataDisplay = undefined;
-    _alfred_extension.currentActiveItem = undefined;
-    _alfred_extension.searchLock = false;
-
-}
-
-function closeAlfred() {
-    _alfred_extension.alfred.remove();
-    resetAlfredData();
-}
 var handle_escape = new Handle(function (key, input, e) {
     var alt = e.altKey;
     if (key == '.' && alt) {
@@ -141,10 +129,10 @@ var handle_escape = new Handle(function (key, input, e) {
 
 handle_go = new Handle(function (key, input, e) {
     var alt = e.altKey;
-    if (key == '/' && alt) {
-        var href=_alfred_extension.currentActiveItem.getAttribute('data-href');
-        if(href){
-            actionDeliver.do('open',href)
+    if (key == '/' && alt && _alfred_extension.currentActiveItem) {
+        var href = _alfred_extension.currentActiveItem.getAttribute('data-href');
+        if (href) {
+            actionDeliver.do('open', href)
         }
     } else {
         this.next.do.apply(this.next, arguments)
