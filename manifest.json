@@ -14,7 +14,7 @@
   },
   "content_scripts": [{
     "matches": ["*://*/*"],
-    "js": ["js/contentScript/alfred.icon.js", "js/contentScript/alfred.action.js", "js/contentScript/alfred.handle.js", "js/contentScript/alfred.index.js"],
+    "js": ["js/lib/jquery-3.1.1.min.js","js/contentScript/alfred.icon.js", "js/contentScript/alfred.index.js","js/contentScript/alfred.action.js", "js/contentScript/alfred.handle.js"],
     "css": ["css/alfred.css"]
   }],
   "permissions": [

@@ -1,78 +1,91 @@
-var _alfred_extension = {
-	currentActionType: undefined,
-	currentDataDisplay: undefined,
-	currentActiveItem: undefined,
-	searchLock: false,
-	createLock: false
+var alfred_mode={
+	'SEARCH':'SEARCH',
+	'NORMAL':'NORMAL',
+	'LINK':'LINK',
+	'QUICK':'QUICK'
 }
 
-function createAlfred() {
-	if (!_alfred_extension.createLock) {
-		var alfred = document.createElement('div'),
-			alfred_content = document.createElement('div'),
-			alfred_input = document.createElement('input'),
-			alfred_input_container = document.createElement('div'),
-			alfred_action_img = document.createElement('img');
+function Alfred() {
+	this.initDom();
+	this.mode=alfred_mode.NORMAL;
+	this.inputHistory=new AlfredHistory();
+}
 
-		_alfred_extension.alfred = alfred;
-		_alfred_extension.alfred_content = alfred_content;
-		_alfred_extension.alfred_input = alfred_input;
-		_alfred_extension.alfred_action_img = alfred_action_img;
+Alfred.prototype.initDom=function(){
+	this.domReference={};
+	var container = document.createElement('div'),
+		stage = document.createElement('div'),
+		input = document.createElement('input'),
+		input_container = document.createElement('div'),
+		action_img = document.createElement('img');
 
-		alfred.setAttribute('id', 'alfred-container');
-		alfred_content.setAttribute('id', 'alfred-stage');
-		alfred_input.setAttribute('id', 'alfred-input');
+	container.setAttribute('id', 'alfred-container');
+	stage.setAttribute('id', 'alfred-stage');
+	input.setAttribute('id', 'alfred-input');
 
-		alfred_input_container.appendChild(alfred_input);
-		alfred_input_container.appendChild(alfred_action_img);
-		alfred_input_container.setAttribute('id', 'alfred-input-container')
+	input_container.appendChild(input);
+	input_container.appendChild(action_img);
+	input_container.setAttribute('id', 'alfred-input-container')
 
-		alfred_action_img.style.display = "none";
-		alfred_action_img.setAttribute('id', "alfred-action-img")
+	action_img.style.display = "none";
+	action_img.setAttribute('id', "alfred-action-img")
 
-		alfred.appendChild(alfred_input_container);
-		alfred.appendChild(alfred_content);
+	container.appendChild(input_container);
+	container.appendChild(stage);
 
-		document.body.appendChild(alfred);
+	this.domReference.container = container;
+	this.domReference.stage = stage;
+	this.domReference.input = input;
+	this.domReference.input_container = input_container;
+	this.domReference.action_img=action_img;
 
-		attachEventListenerOfInput(alfred_input);
-		alfred_input.focus();
+	attachEventListenerOfInput(input);
+	document.body.appendChild(this.domReference.container);
+}
 
-		_alfred_extension.createLock = true;
-		_alfred_extension.inputHistory=new AlfredHistory()
+Alfred.prototype.close=function(){
+	$(this.domReference.container).hide();
+	this.clear();
+}
+
+Alfred.prototype.open=function(){
+	$(this.domReference.container).show();
+	this.domReference.input.focus();
+}
+
+Alfred.prototype.clear=function(){
+	this.currentActionType=null;
+	this.currentActiveItem=null;
+	this.currentDataDisplay=null;
+	this.mode=alfred_mode.NORMAL;
+}
+
+var createAlfred = (function () {
+	var alfred;
+	return function () {
+		return alfred || (alfred = new Alfred())
 	}
+})()
+
+function AlfredHistory() {
+	this.history = []
 }
 
-function AlfredHistory(){
-	this.history=[]
-}
-
-AlfredHistory.prototype.add=function(value){
+AlfredHistory.prototype.add = function (value) {
 	this.history.push(value)
 }
 
-AlfredHistory.prototype.getLast=function(){
-	return this.history[this.history.length-1]
+AlfredHistory.prototype.getLast = function () {
+	return this.history[this.history.length - 1]
 }
 
-AlfredHistory.prototype.getAll=function(){
+AlfredHistory.prototype.getAll = function () {
 	return this.history
 }
 
-function resetAlfredData() {
-    _alfred_extension.currentActionType = undefined;
-    _alfred_extension.currentDataDisplay = undefined;
-    _alfred_extension.currentActiveItem = undefined;
-    _alfred_extension.searchLock = false;
-}
-
-function closeAlfred() {
-    _alfred_extension.alfred.remove();
-	_alfred_extension.createLock=false;
-    resetAlfredData();
-}
-
 /*监听alfred初始化事件 以及 退出事件*/
+
+var _alfred_extension;
 document.body.addEventListener('keydown', function (e) {
 	var key = e.key,
 		code = e.code
@@ -80,10 +93,11 @@ document.body.addEventListener('keydown', function (e) {
 	if ((key == ',' || code == 'Comma') && alt) {
 		e.stopPropagation();
 		e.preventDefault();
-		createAlfred()
+		_alfred_extension = createAlfred();
+		_alfred_extension.open();
 	}
 	if (key.toLowerCase() == 'escape') {
-		closeAlfred()
+		_alfred_extension.close()
 	}
 })
 
@@ -92,8 +106,9 @@ function attachEventListenerOfInput(input) {
 	input.addEventListener('keydown', function (e) {
 		handle_enter.do(e.key, this, e);
 		e.stopPropagation();
+		console.log(_alfred_extension);
 	})
-	input.addEventListener('change',function(){
+	input.addEventListener('change', function () {
 		console.log('change');
 	})
 }
