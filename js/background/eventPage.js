@@ -1,3 +1,8 @@
+function getDomain(url) {
+    urlWithoutProtocol = url.replace(/\s/g, '').replace(/(http:\/\/)|(https:\/\/)/g, '');
+    var index = urlWithoutProtocol.indexOf('/');
+    return urlWithoutProtocol.slice(0, index);
+}
 var strategies = {
     set: function (value, res) {
         var kv = value.replace(/\s/g, '').split('=');
@@ -6,8 +11,11 @@ var strategies = {
 
         if (key == 'clear') {
             res({
-                icon:'http://cloud.ggoer.com/alfred/setting.png',
-                items:[{title:'已成功删除所有数据',subtitle:''}]
+                icon: 'http://cloud.ggoer.com/alfred/setting.png',
+                items: [{
+                    title: '已成功删除所有数据',
+                    subtitle: ''
+                }]
             })
             return chrome.storage.local.clear()
         }
@@ -20,9 +28,12 @@ var strategies = {
             chrome.storage.local.set(settingObj)
         })
         res({
-                icon:'http://cloud.ggoer.com/alfred/setting.png',
-                items:[{title:'已成功设置：',subtitle:value}]
-            })
+            icon: 'http://cloud.ggoer.com/alfred/setting.png',
+            items: [{
+                title: '已成功设置：',
+                subtitle: value
+            }]
+        })
     },
     google: function (value, res) {
         chrome.storage.local.get('google', function (result) {
@@ -84,7 +95,7 @@ var strategies = {
                 items = [];
             history.forEach(function (item) {
                 items.push({
-                    icon: 'http://' + item + '/favicon.ico',
+                    icon: 'http://' + getDomain(item) + '/favicon.ico',
                     title: item,
                     subtitle: '',
                     href: item
@@ -98,7 +109,9 @@ var strategies = {
     setHistory: function (value) {
         chrome.storage.local.get('goHistory', function (items) {
             var history = items.goHistory || [];
-            history.unshift(value);
+            if (history.indexOf(value) == -1) {
+                history.unshift(value);
+            }
             history = history.slice(0, 51);
             chrome.storage.local.set({
                 'goHistory': history
