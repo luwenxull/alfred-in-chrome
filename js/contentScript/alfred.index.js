@@ -1,18 +1,18 @@
-var alfred_mode={
-	'SEARCH':'SEARCH',
-	'NORMAL':'NORMAL',
-	'LINK':'LINK',
-	'QUICK':'QUICK'
+var alfred_mode = {
+	'SEARCH': 'SEARCH',
+	'NORMAL': 'NORMAL',
+	'LINK': 'LINK',
+	'QUICK': 'QUICK'
 }
 
 function Alfred() {
 	this.initDom();
-	this.mode=alfred_mode.NORMAL;
-	this.inputHistory=new AlfredHistory();
+	this.mode = alfred_mode.NORMAL;
+	this.inputHistory = new AlfredHistory();
 }
 
-Alfred.prototype.initDom=function(){
-	this.domReference={};
+Alfred.prototype.initDom = function () {
+	this.domReference = {};
 	var container = document.createElement('div'),
 		stage = document.createElement('div'),
 		input = document.createElement('input'),
@@ -37,27 +37,39 @@ Alfred.prototype.initDom=function(){
 	this.domReference.stage = stage;
 	this.domReference.input = input;
 	this.domReference.input_container = input_container;
-	this.domReference.action_img=action_img;
+	this.domReference.action_img = action_img;
 
 	attachEventListenerOfInput(input);
 	document.body.appendChild(this.domReference.container);
 }
 
-Alfred.prototype.close=function(){
+Alfred.prototype.close = function () {
 	$(this.domReference.container).hide();
 	this.clear();
 }
 
-Alfred.prototype.open=function(){
+Alfred.prototype.open = function () {
 	$(this.domReference.container).show();
 	this.domReference.input.focus();
 }
 
-Alfred.prototype.clear=function(){
-	this.currentActionType=null;
-	this.currentActiveItem=null;
-	this.currentDataDisplay=null;
-	this.mode=alfred_mode.NORMAL;
+Alfred.prototype.clear = function () {
+	this.currentActionType = null;
+	this.currentActiveItem = null;
+	this.currentDataDisplay = null;
+	this.mode = alfred_mode.NORMAL;
+}
+
+Alfred.prototype.setActionType = function (type) {
+	var img = this.domReference.action_img;
+	for (var i = 0; i < allActionTypes.length; i++) {
+		var aType = allActionTypes[i]
+		if (aType === type) {
+			img.setAttribute('src', iconConfig[type]);
+			img.style.display = "inline";
+			this.currentActionType = type
+		}
+	}
 }
 
 var createAlfred = (function () {
@@ -104,11 +116,15 @@ document.body.addEventListener('keydown', function (e) {
 
 function attachEventListenerOfInput(input) {
 	input.addEventListener('keydown', function (e) {
-		handle_enter.do(e.key, this, e);
 		e.stopPropagation();
-		console.log(_alfred_extension);
-	})
-	input.addEventListener('change', function () {
-		console.log('change');
-	})
+		if(e.key.toLowerCase() == 'arrowdown' || e.key.toLowerCase() == 'arrowup'){
+			e.preventDefault()
+		};
+		setTimeout(function () {
+			handle_enter.do(e.key, this, e);
+		}.bind(this))
+		console.log(_alfred_extension.mode);
+	});
+
+
 }

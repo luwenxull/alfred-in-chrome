@@ -1,3 +1,7 @@
+var regexer = {
+    web: /\.{0,1}\w+\.\w+.*/
+}
+
 /*策略*/
 var strategies = {
     google: function (content) {
@@ -45,6 +49,22 @@ var strategies = {
             content: content
         }, function (res) {});
     },
+    getHistory: function (content) {
+        chrome.runtime.sendMessage({
+            type: 'getHistory',
+            content: content
+        }, function (res) {
+            displayContent(res)
+        });
+    },
+    setHistory: function (content) {
+        if (regexer.web.test(content)) {
+            chrome.runtime.sendMessage({
+                type: 'setHistory',
+                content: content
+            }, function (res) {});
+        }
+    },
     bus: function (content) {
         chrome.runtime.sendMessage({
             type: 'bus',
@@ -71,11 +91,12 @@ function displayContent(json, filter) {
 
     var TemplateCopy, item;
 
-    var stage = _alfred_extension.domReference.stage,$s=$(stage);
+    var stage = _alfred_extension.domReference.stage,
+        $s = $(stage);
     stage.innerHTML = '';
     for (var i = 0; i < json.items.length; i++) {
         item = json.items[i], TemplateCopy = contentTemplate;
-        TemplateCopy = TemplateCopy.replace('$$1', json.icon);
+        TemplateCopy = TemplateCopy.replace('$$1', item.icon || json.icon);
         TemplateCopy = TemplateCopy.replace('$$2', item.title);
         TemplateCopy = TemplateCopy.replace('$$3', item.subtitle);
         TemplateCopy = TemplateCopy.replace('$$href', item.href || '');

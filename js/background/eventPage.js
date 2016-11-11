@@ -51,6 +51,33 @@ var strategies = {
             url: value
         })
     },
+    getHistory: function (value, res) {
+        chrome.storage.local.get('goHistory', function (items) {
+            var history = items.goHistory,
+                items = [];
+            history.forEach(function (item) {
+                items.push({
+                    icon: 'http://' + item + '/favicon.ico',
+                    title: item,
+                    subtitle: '',
+                    href: item
+                })
+            })
+            res({
+                items: items
+            })
+        })
+    },
+    setHistory: function (value) {
+        chrome.storage.local.get('goHistory', function (items) {
+            var history = items.goHistory;
+            history.unshift(value);
+            history.length=50;
+            chrome.storage.local.set({
+                'goHistory': history
+            })
+        })
+    },
     bus: function (value, res) {
         var xhr = makeRequest({
             url: "http://ggoer.com/proxy",
@@ -81,6 +108,9 @@ var strategies = {
     }
 }
 
+// chrome.storage.local.set({
+//     goHistory:['ggoer.com','google.com']
+// })
 
 function makeRequest(info, callback) {
     var xhr = new XMLHttpRequest();

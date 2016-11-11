@@ -21,6 +21,7 @@
     "activeTab",
     "tabs",
     "bookmarks",
+    "storage",
     "http://*.ggoer.com/"
   ]
 }
