@@ -52,7 +52,7 @@ function transformActionAbbr(abbr) {
 }
 
 function filterByValue(value) {
-    if (_alfred_extension.mode == alfred_mode.SEARCH) {
+    if (_alfred_extension.mode == alfred_mode.SEARCH && _alfred_extension.currentDataDisplay) {
         var items = _alfred_extension.currentDataDisplay.items;
         var item, filterItems = []
         for (var i = 0; i < items.length; i++) {
@@ -124,12 +124,7 @@ function noVal(value) {
 
 var handle_backspace = new Handle(function (key, input, e) {
     if (key.toLowerCase() == 'backspace' && e.shiftKey) {
-        var img = _alfred_extension.domReference.action_img,
-            stage = _alfred_extension.domReference.stage;
         _alfred_extension.clear();
-        img.style.display = 'none';
-        stage.innerHTML = '';
-        input.value='';
     } else {
         this.next.do.apply(this.next, arguments)
     }

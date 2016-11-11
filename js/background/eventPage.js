@@ -1,7 +1,34 @@
 var strategies = {
+    set: function (value, res) {
+        var kv = value.replace(/\s/g, '').split('=');
+        var key = kv.shift(),
+            val = kv.pop();
+
+        if (key == 'clear') {
+            res({
+                icon:'http://cloud.ggoer.com/alfred/setting.png',
+                items:[{title:'已成功删除所有数据',subtitle:''}]
+            })
+            return chrome.storage.local.clear()
+        }
+        chrome.storage.local.get('settings', function (result) {
+            var settings = result.settings || [];
+            settings.push(key);
+            var settingObj = {};
+            settingObj[key] = val;
+            settingObj.settings = settings;
+            chrome.storage.local.set(settingObj)
+        })
+        res({
+                icon:'http://cloud.ggoer.com/alfred/setting.png',
+                items:[{title:'已成功设置：',subtitle:value}]
+            })
+    },
     google: function (value, res) {
-        chrome.tabs.create({
-            url: "https://google.com/#q=" + value
+        chrome.storage.local.get('google', function (result) {
+            chrome.tabs.create({
+                url: "https://" + (result.google || "google.com") + "/#q=" + value
+            })
         })
     },
     baidu: function (value) {
@@ -52,8 +79,8 @@ var strategies = {
         })
     },
     getHistory: function (value, res) {
-        chrome.storage.local.get('goHistory', function (items) {
-            var history = items.goHistory,
+        chrome.storage.local.get('goHistory', function (storage) {
+            var history = storage.goHistory || [],
                 items = [];
             history.forEach(function (item) {
                 items.push({
@@ -70,9 +97,9 @@ var strategies = {
     },
     setHistory: function (value) {
         chrome.storage.local.get('goHistory', function (items) {
-            var history = items.goHistory;
+            var history = items.goHistory || [];
             history.unshift(value);
-            history.length=50;
+            history = history.slice(0, 51);
             chrome.storage.local.set({
                 'goHistory': history
             })

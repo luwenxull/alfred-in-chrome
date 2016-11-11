@@ -54,6 +54,12 @@ Alfred.prototype.open = function () {
 }
 
 Alfred.prototype.clear = function () {
+	var img = this.domReference.action_img,
+		stage = this.domReference.stage,
+		input = this.domReference.input;
+	img.style.display = 'none';
+	stage.innerHTML = '';
+	input.value = '';
 	this.currentActionType = null;
 	this.currentActiveItem = null;
 	this.currentDataDisplay = null;
@@ -117,7 +123,7 @@ document.body.addEventListener('keydown', function (e) {
 function attachEventListenerOfInput(input) {
 	input.addEventListener('keydown', function (e) {
 		e.stopPropagation();
-		if(e.key.toLowerCase() == 'arrowdown' || e.key.toLowerCase() == 'arrowup'){
+		if (e.key.toLowerCase() == 'arrowdown' || e.key.toLowerCase() == 'arrowup') {
 			e.preventDefault()
 		};
 		setTimeout(function () {

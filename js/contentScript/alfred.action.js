@@ -4,6 +4,14 @@ var regexer = {
 
 /*策略*/
 var strategies = {
+    set:function(content){
+        chrome.runtime.sendMessage({
+            type: 'set',
+            content: content
+        }, function (res) {
+            displayContent(res)
+        });
+    },
     google: function (content) {
         chrome.runtime.sendMessage({
             type: 'google',
@@ -82,7 +90,7 @@ var actionDeliver = {
     }
 }
 
-var allActionTypes = ['google', 'collins', 'bookmarks', 'go', 'bus', 'baidu'];
+var allActionTypes = ['google', 'collins', 'bookmarks', 'go', 'bus', 'baidu','set'];
 
 var contentTemplate = "<div class='stage-item' data-href='$$href'><img class='item-icon' src='$$1'/><div class='item-text'><p class='text-title'>$$2</p><p class='text-subtitle'>$$3</p></div></div>"
 
