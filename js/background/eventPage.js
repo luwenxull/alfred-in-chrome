@@ -1,7 +1,7 @@
 function getDomain(url) {
     urlWithoutProtocol = url.replace(/\s/g, '').replace(/(http:\/\/)|(https:\/\/)/g, '');
     var index = urlWithoutProtocol.indexOf('/');
-    return urlWithoutProtocol.slice(0, index);
+    return index == -1 ? urlWithoutProtocol : urlWithoutProtocol.slice(0, index);
 }
 var strategies = {
     set: function (value, res) {
