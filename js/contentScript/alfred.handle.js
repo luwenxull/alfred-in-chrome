@@ -65,7 +65,9 @@ function filterByValue(value) {
         actionDeliver.do('filter', {
             icon: _alfred_extension.currentDataDisplay.icon,
             items: filterItems
-        })
+        });
+
+        _alfred_extension.currentActiveItem=null;
     }
 }
 
