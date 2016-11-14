@@ -17,27 +17,36 @@ Alfred.prototype.initDom = function () {
 		stage = document.createElement('div'),
 		input = document.createElement('input'),
 		input_container = document.createElement('div'),
-		action_img = document.createElement('img');
+		action_img = document.createElement('img'),
+		loading = document.createElement('div'),
+		loading_img=document.createElement('img');
 
 	container.setAttribute('id', 'alfred-container');
 	stage.setAttribute('id', 'alfred-stage');
 	input.setAttribute('id', 'alfred-input');
-
+	loading.setAttribute('id', 'alfred-loading');
+	loading_img.setAttribute('src',iconConfig.loading)
+	
+	loading.appendChild(loading_img)
 	input_container.appendChild(input);
 	input_container.appendChild(action_img);
 	input_container.setAttribute('id', 'alfred-input-container')
 
 	action_img.style.display = "none";
-	action_img.setAttribute('id', "alfred-action-img")
+	action_img.setAttribute('id', "alfred-action-img");
+	loading.style.display = "none";
+
 
 	container.appendChild(input_container);
 	container.appendChild(stage);
+	container.appendChild(loading);
 
 	this.domReference.container = container;
 	this.domReference.stage = stage;
 	this.domReference.input = input;
 	this.domReference.input_container = input_container;
 	this.domReference.action_img = action_img;
+	this.domReference.loading = loading;
 
 	attachEventListenerOfInput(input);
 	autoClose();
@@ -59,12 +68,15 @@ Alfred.prototype.clear = function () {
 		stage = this.domReference.stage,
 		input = this.domReference.input;
 	img.style.display = 'none';
-	stage.innerHTML = '';
 	input.value = '';
 	this.currentActionType = null;
 	this.currentActiveItem = null;
 	this.currentDataDisplay = null;
 	this.mode = alfred_mode.NORMAL;
+
+	displayContent({
+		items: []
+	});
 }
 
 Alfred.prototype.setActionType = function (type) {

@@ -1,5 +1,5 @@
 function moveActive(key) {
-    var stage_items = document.querySelectorAll('.stage-item'),
+    var stage_items = document.querySelectorAll('.alfred-stage-item'),
         l = stage_items.length;
     if (stage_items) {
         var currentActiveIndex = -1;

@@ -6,4 +6,5 @@ var iconConfig={
     bus:'http://cloud.ggoer.com/alfred/bus.png',
     baidu:'http://cloud.ggoer.com/alfred/baidu.png',
     set:'http://cloud.ggoer.com/alfred/setting.png',
+    loading:'http://cloud.ggoer.com/alfred/loading.gif',
 }

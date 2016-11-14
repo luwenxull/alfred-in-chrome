@@ -38,7 +38,15 @@
 }
 
 
+#alfred-loading{
+    width: 400px;
+    margin: 0 auto;
+    background-color: rgba(225, 245, 254, 0.8);
+}
 
+#alfred-loading img{
+    height: 50px;
+}
 
 #alfred-stage{
     width: 400px;
@@ -58,39 +66,39 @@
     width: 20px;
     top: 9px;
 }
-#alfred-stage .stage-item{
+#alfred-stage .alfred-stage-item{
     padding: 5px;
     border-bottom: 1px solid #e0f7fa ;
 }
 
-#alfred-stage .stage-item.active{
+#alfred-stage .alfred-stage-item.active{
     background: #90CAF9
 }
 
-#alfred-stage .stage-item:last-child{
+#alfred-stage .alfred-stage-item:last-child{
     border-bottom: 0
 }
 
-#alfred-stage .item-text{
+#alfred-stage .alfred-item-text{
     display: inline-block;
     vertical-align: middle;
     margin-left: 10px;
     width: 330px;
 }
 
-#alfred-stage .item-icon{
+#alfred-stage .alfred-item-icon{
     width: 20px;
     vertical-align: middle
 }
 
-#alfred-stage .text-subtitle{
+#alfred-stage .alfred-text-subtitle{
     line-height: 20px;
     font-size: 14px;
     color: #757575;
     word-wrap: break-word;
 }
 
-#alfred-stage .text-title{
+#alfred-stage .alfred-text-title{
     font-size: 16px;
     line-height: 25px;
     word-wrap: break-word;

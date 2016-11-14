@@ -4,7 +4,7 @@ var regexer = {
 
 /*策略*/
 var strategies = {
-    set:function(content){
+    set: function (content) {
         chrome.runtime.sendMessage({
             type: 'set',
             content: content
@@ -86,13 +86,15 @@ var strategies = {
 /*策略分发对象*/
 var actionDeliver = {
     do: function (type, value) {
+        showLoading();//显示loading
+        displayContent({items:[]});//同时清空当前显示项
         strategies[type].call(null, value)
     }
 }
 
-var allActionTypes = ['google', 'collins', 'bookmarks', 'go', 'bus', 'baidu','set'];
+var allActionTypes = ['google', 'collins', 'bookmarks', 'go', 'bus', 'baidu', 'set'];
 
-var contentTemplate = "<div class='stage-item' data-href='$$href'><img class='item-icon' src='$$1'/><div class='item-text'><p class='text-title'>$$2</p><p class='text-subtitle'>$$3</p></div></div>"
+var contentTemplate = "<div class='alfred-stage-item' data-href='$$href'><img class='alfred-item-icon' src='$$1'/><div class='alfred-item-text'><p class='alfred-text-title'>$$2</p><p class='alfred-text-subtitle'>$$3</p></div></div>"
 
 function displayContent(json, filter) {
     !filter && (_alfred_extension.currentDataDisplay = json);
@@ -100,12 +102,13 @@ function displayContent(json, filter) {
     var TemplateCopy, item;
     var stage = _alfred_extension.domReference.stage,
         $s = $(stage);
+
     stage.innerHTML = '';
 
-    var l=json.items.length;
-    if(l){
+    var l = json.items.length;
+    if (l) {
         _alfred_extension.domReference.input.classList.add('half-border')
-    }else{
+    } else {
         _alfred_extension.domReference.input.classList.remove('half-border')
     }
 
@@ -117,4 +120,16 @@ function displayContent(json, filter) {
         TemplateCopy = TemplateCopy.replace('$$href', item.href || '');
         $s.append(TemplateCopy)
     }
+}
+
+function showLoading() {
+    var loading = _alfred_extension.domReference.loading;
+    loading.style.display = 'block';
+     _alfred_extension.domReference.input.classList.add('half-border');
+}
+
+function hideLoading() {
+    var loading = _alfred_extension.domReference.loading;
+    loading.style.display = 'none';
+     _alfred_extension.domReference.input.classList.remove('half-border')
 }
