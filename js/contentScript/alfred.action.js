@@ -98,11 +98,18 @@ function displayContent(json, filter) {
     !filter && (_alfred_extension.currentDataDisplay = json);
 
     var TemplateCopy, item;
-
     var stage = _alfred_extension.domReference.stage,
         $s = $(stage);
     stage.innerHTML = '';
-    for (var i = 0; i < json.items.length; i++) {
+
+    var l=json.items.length;
+    if(l){
+        _alfred_extension.domReference.input.classList.add('half-border')
+    }else{
+        _alfred_extension.domReference.input.classList.remove('half-border')
+    }
+
+    for (var i = 0; i < l; i++) {
         item = json.items[i], TemplateCopy = contentTemplate;
         TemplateCopy = TemplateCopy.replace('$$1', item.icon || json.icon);
         TemplateCopy = TemplateCopy.replace('$$2', item.title);

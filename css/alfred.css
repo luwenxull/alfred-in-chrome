@@ -24,12 +24,21 @@
     outline: 0;
     width: 100%;
     padding: 6px 12px 6px 35px;
-    border-top-left-radius: 3px;
-    border-top-right-radius: 3px;
     background-color: #E0F7FA;
     font-size: 16px;
     line-height: 25px;
+    border-radius: 3px;
 }
+
+#alfred-input.half-border{
+    border-top-left-radius: 3px;
+    border-top-right-radius: 3px;
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+}
+
+
+
 
 #alfred-stage{
     width: 400px;

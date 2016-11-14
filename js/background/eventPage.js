@@ -35,6 +35,11 @@ var strategies = {
             }]
         })
     },
+    autoClose:function(value,res){
+        chrome.storage.local.get('autoClose',function(result){
+            res(result.autoClose)
+        })
+    },
     google: function (value, res) {
         chrome.storage.local.get('google', function (result) {
             chrome.tabs.create({

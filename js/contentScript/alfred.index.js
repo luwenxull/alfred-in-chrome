@@ -40,6 +40,7 @@ Alfred.prototype.initDom = function () {
 	this.domReference.action_img = action_img;
 
 	attachEventListenerOfInput(input);
+	autoClose();
 	document.body.appendChild(this.domReference.container);
 }
 
@@ -131,6 +132,17 @@ function attachEventListenerOfInput(input) {
 		}.bind(this))
 		console.log(_alfred_extension.mode);
 	});
+}
 
-
+/*是否自动关闭*/
+function autoClose() {
+	chrome.runtime.sendMessage({
+		type: 'autoClose'
+	}, function (res) {
+		if (res == '1') {
+			_alfred_extension.domReference.input.addEventListener('blur', function (e) {
+				_alfred_extension.close()
+			});
+		}
+	});
 }
