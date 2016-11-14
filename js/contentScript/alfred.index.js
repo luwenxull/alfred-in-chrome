@@ -2,12 +2,14 @@ var alfred_mode = {
 	'SEARCH': 'SEARCH',
 	'NORMAL': 'NORMAL',
 	'LINK': 'LINK',
-	'QUICK': 'QUICK'
+	'QUICK': 'QUICK',
+	'LOADING':'LOADING',
 }
 
 function Alfred() {
 	this.initDom();
 	this.mode = alfred_mode.NORMAL;
+	this.previousMode=null;
 	this.inputHistory = new AlfredHistory();
 }
 
@@ -19,15 +21,15 @@ Alfred.prototype.initDom = function () {
 		input_container = document.createElement('div'),
 		action_img = document.createElement('img'),
 		loading = document.createElement('div'),
-		loading_img=document.createElement('img');
+		loading_img = document.createElement('img');
 
 	container.setAttribute('id', 'alfred-container');
 	stage.setAttribute('id', 'alfred-stage');
 	input.setAttribute('id', 'alfred-input');
 	loading.setAttribute('id', 'alfred-loading');
-	loading_img.setAttribute('src',iconConfig.loading)
-	
-	loading.appendChild(loading_img)
+	loading_img.setAttribute('src', iconConfig.loading)
+
+	loading.appendChild(loading_img);
 	input_container.appendChild(input);
 	input_container.appendChild(action_img);
 	input_container.setAttribute('id', 'alfred-input-container')
@@ -38,8 +40,8 @@ Alfred.prototype.initDom = function () {
 
 
 	container.appendChild(input_container);
-	container.appendChild(stage);
 	container.appendChild(loading);
+	container.appendChild(stage);
 
 	this.domReference.container = container;
 	this.domReference.stage = stage;
@@ -68,15 +70,14 @@ Alfred.prototype.clear = function () {
 		stage = this.domReference.stage,
 		input = this.domReference.input;
 	img.style.display = 'none';
+	stage.innerHTML = '';
 	input.value = '';
 	this.currentActionType = null;
 	this.currentActiveItem = null;
 	this.currentDataDisplay = null;
 	this.mode = alfred_mode.NORMAL;
 
-	displayContent({
-		items: []
-	});
+	prepareStage(null)
 }
 
 Alfred.prototype.setActionType = function (type) {
@@ -89,6 +90,18 @@ Alfred.prototype.setActionType = function (type) {
 			this.currentActionType = type
 		}
 	}
+}
+
+Alfred.prototype.loading=function(){
+    var loading = this.domReference.loading;
+    loading.style.display = 'block';
+    this.domReference.input.classList.add('half-border');
+}
+
+Alfred.prototype.display=function(){
+    var loading = this.domReference.loading;
+    loading.style.display = 'none';
+    this.domReference.input.classList.remove('half-border');
 }
 
 var createAlfred = (function () {

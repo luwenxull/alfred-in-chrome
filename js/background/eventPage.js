@@ -44,13 +44,15 @@ var strategies = {
         chrome.storage.local.get('google', function (result) {
             chrome.tabs.create({
                 url: "https://" + (result.google || "google.com") + "/#q=" + value
-            })
+            });
+            res(0);
         })
     },
-    baidu: function (value) {
+    baidu: function (value,res) {
         chrome.tabs.create({
             url: "https://baidu.com/s?wd=" + value
-        })
+        });
+        res(0);
     },
     collins: function (value, res) {
         var xhr = makeRequest({
@@ -89,10 +91,11 @@ var strategies = {
             });
         });
     },
-    go: function (value) {
+    go: function (value,res) {
         chrome.tabs.create({
             url: value
-        })
+        });
+        res(0);
     },
     getHistory: function (value, res) {
         chrome.storage.local.get('goHistory', function (storage) {
@@ -111,7 +114,7 @@ var strategies = {
             })
         })
     },
-    setHistory: function (value) {
+    setHistory: function (value,res) {
         chrome.storage.local.get('goHistory', function (items) {
             var history = items.goHistory || [];
             if (history.indexOf(value) == -1) {
@@ -121,7 +124,8 @@ var strategies = {
             chrome.storage.local.set({
                 'goHistory': history
             })
-        })
+        });
+        res(0);
     },
     bus: function (value, res) {
         var xhr = makeRequest({

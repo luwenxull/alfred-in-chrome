@@ -5,11 +5,12 @@ var regexer = {
 /*策略*/
 var strategies = {
     set: function (content) {
+        _alfred_extension.loading();
         chrome.runtime.sendMessage({
             type: 'set',
             content: content
         }, function (res) {
-            displayContent(res)
+            prepareStage(res)
         });
     },
     google: function (content) {
@@ -17,7 +18,7 @@ var strategies = {
             type: 'google',
             content: content
         }, function (res) {
-            // displayContent(res)
+            // _alfred_extension.display();
         });
     },
     baidu: function (content) {
@@ -25,27 +26,29 @@ var strategies = {
             type: 'baidu',
             content: content
         }, function (res) {
-            // displayContent(res)
+            // _alfred_extension.display();
         });
     },
     collins: function (content) {
+        _alfred_extension.loading();
         chrome.runtime.sendMessage({
             type: 'collins',
             content: content
         }, function (res) {
-            displayContent(res)
+            prepareStage(res)
         });
     },
     bookmarks: function (content) {
+        _alfred_extension.loading();
         chrome.runtime.sendMessage({
             type: 'bookmarks',
             content: content
         }, function (res) {
-            displayContent(res)
+            prepareStage(res)
         });
     },
     filter: function (filterItems) {
-        displayContent(filterItems, true)
+        prepareStage(filterItems, true)
     },
     go: function (content) {
         var reg = /https{0,1}:\/\//i;
@@ -55,14 +58,17 @@ var strategies = {
         chrome.runtime.sendMessage({
             type: 'go',
             content: content
-        }, function (res) {});
+        }, function (res) {
+            // _alfred_extension.display();
+        });
     },
     getHistory: function (content) {
+        _alfred_extension.loading();
         chrome.runtime.sendMessage({
             type: 'getHistory',
             content: content
         }, function (res) {
-            displayContent(res)
+            prepareStage(res)
         });
     },
     setHistory: function (content) {
@@ -70,15 +76,18 @@ var strategies = {
             chrome.runtime.sendMessage({
                 type: 'setHistory',
                 content: content
-            }, function (res) {});
+            }, function (res) {
+                // _alfred_extension.display();
+            });
         }
     },
     bus: function (content) {
+        _alfred_extension.loading();
         chrome.runtime.sendMessage({
             type: 'bus',
             content: content
         }, function (res) {
-            displayContent(res)
+            prepareStage(res)
         });
     }
 }
@@ -86,8 +95,8 @@ var strategies = {
 /*策略分发对象*/
 var actionDeliver = {
     do: function (type, value) {
-        showLoading();//显示loading
-        displayContent({items:[]});//同时清空当前显示项
+        // _alfred_extension.loading(); //显示loading
+        // _alfred_extension.domReference.stage.innerHTML=''; //同时清空当前显示项
         strategies[type].call(null, value)
     }
 }
@@ -97,21 +106,11 @@ var allActionTypes = ['google', 'collins', 'bookmarks', 'go', 'bus', 'baidu', 's
 var contentTemplate = "<div class='alfred-stage-item' data-href='$$href'><img class='alfred-item-icon' src='$$1'/><div class='alfred-item-text'><p class='alfred-text-title'>$$2</p><p class='alfred-text-subtitle'>$$3</p></div></div>"
 
 function displayContent(json, filter) {
-    !filter && (_alfred_extension.currentDataDisplay = json);
-
     var TemplateCopy, item;
     var stage = _alfred_extension.domReference.stage,
         $s = $(stage);
 
-    stage.innerHTML = '';
-
     var l = json.items.length;
-    if (l) {
-        _alfred_extension.domReference.input.classList.add('half-border')
-    } else {
-        _alfred_extension.domReference.input.classList.remove('half-border')
-    }
-
     for (var i = 0; i < l; i++) {
         item = json.items[i], TemplateCopy = contentTemplate;
         TemplateCopy = TemplateCopy.replace('$$1', item.icon || json.icon);
@@ -122,14 +121,19 @@ function displayContent(json, filter) {
     }
 }
 
-function showLoading() {
-    var loading = _alfred_extension.domReference.loading;
-    loading.style.display = 'block';
-     _alfred_extension.domReference.input.classList.add('half-border');
-}
 
-function hideLoading() {
-    var loading = _alfred_extension.domReference.loading;
-    loading.style.display = 'none';
-     _alfred_extension.domReference.input.classList.remove('half-border')
+function prepareStage(json, filter) {
+    _alfred_extension.display(); //切换为非加载模式
+
+    !filter && (_alfred_extension.currentDataDisplay = json);
+
+    _alfred_extension.domReference.stage.innerHTML = ''; //清空当前显示项
+    if (json && json.items) {
+        if (json.items.length) {
+            _alfred_extension.domReference.input.classList.add('half-border')
+        } else {
+            _alfred_extension.domReference.input.classList.remove('half-border')
+        }
+        displayContent(json, filter);
+    }
 }

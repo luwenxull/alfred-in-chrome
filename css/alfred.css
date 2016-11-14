@@ -72,7 +72,8 @@
 }
 
 #alfred-stage .alfred-stage-item.active{
-    background: #90CAF9
+    background: #90CAF9;
+    padding:10px 5px;
 }
 
 #alfred-stage .alfred-stage-item:last-child{

@@ -83,12 +83,12 @@ enterStrategies[alfred_mode.NORMAL] = function (type, input) {
         _alfred_extension.setActionType(type);
         input.value = '';
         if (type == 'bookmarks') {
+            _alfred_extension.mode = alfred_mode.SEARCH;
             actionDeliver.do(type);
-            _alfred_extension.mode = alfred_mode.SEARCH
         }
         if (type == 'go') {
+            _alfred_extension.mode = alfred_mode.SEARCH;
             actionDeliver.do('getHistory');
-            _alfred_extension.mode = alfred_mode.SEARCH
         }
     }
 };
