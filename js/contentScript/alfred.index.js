@@ -3,13 +3,13 @@ var alfred_mode = {
 	'NORMAL': 'NORMAL',
 	'LINK': 'LINK',
 	'QUICK': 'QUICK',
-	'LOADING':'LOADING',
+	'LOADING': 'LOADING',
 }
 
 function Alfred() {
 	this.initDom();
 	this.mode = alfred_mode.NORMAL;
-	this.previousMode=null;
+	this.previousMode = null;
 	this.inputHistory = new AlfredHistory();
 }
 
@@ -92,16 +92,16 @@ Alfred.prototype.setActionType = function (type) {
 	}
 }
 
-Alfred.prototype.loading=function(){
-    var loading = this.domReference.loading;
-    loading.style.display = 'block';
-    this.domReference.input.classList.add('half-border');
+Alfred.prototype.loading = function () {
+	var loading = this.domReference.loading;
+	loading.style.display = 'block';
+	this.domReference.input.classList.add('half-border');
 }
 
-Alfred.prototype.display=function(){
-    var loading = this.domReference.loading;
-    loading.style.display = 'none';
-    this.domReference.input.classList.remove('half-border');
+Alfred.prototype.display = function () {
+	var loading = this.domReference.loading;
+	loading.style.display = 'none';
+	this.domReference.input.classList.remove('half-border');
 }
 
 var createAlfred = (function () {
@@ -131,18 +131,19 @@ AlfredHistory.prototype.getAll = function () {
 
 var _alfred_extension;
 document.body.addEventListener('keydown', function (e) {
-	var key = e.key,
-		code = e.code
-	alt = e.altKey;
-	if ((key == ',' || code == 'Comma') && alt) {
-		e.stopPropagation();
-		e.preventDefault();
-		_alfred_extension = createAlfred();
-		_alfred_extension.open();
-	}
-	if (key.toLowerCase() == 'escape') {
-		_alfred_extension.close()
-	}
+		var key = e.key,
+			code = e.code
+		alt = e.altKey;
+		if ((key == ',' || code == 'Comma') && alt) {
+			e.stopPropagation();
+			e.preventDefault();
+			_alfred_extension = createAlfred();
+			_alfred_extension.open();
+		}
+		if (key.toLowerCase() == 'escape') {
+			_alfred_extension && _alfred_extension.close()
+		}
+	
 })
 
 
